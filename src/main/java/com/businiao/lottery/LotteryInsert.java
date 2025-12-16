@@ -10,14 +10,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
 public class LotteryInsert {
-    private static final String JDBC_URL = "jdbc:mysql://10.241.41.11:3306/lottery?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai";
+    private static final String JDBC_URL = "jdbc:mysql://10.241.30.70:3307/lottery?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai";
     private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "Bonree@2025";
+    private static final String JDBC_PASSWORD = "123456";
 
     public static void main(String[] args) throws Exception {
         var sportteryClient = new SportteryClient();
 
-        for (int i = 65; i <= 93; i++) {
+        for (int i = 1; i <= 2; i++) {
             String json = sportteryClient.getHistoryPageList(i);
             try {
                 insert(json);
