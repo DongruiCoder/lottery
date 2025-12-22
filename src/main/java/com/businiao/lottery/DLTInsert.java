@@ -9,16 +9,13 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
-public class LotteryInsert {
-    private static final String JDBC_URL = "jdbc:mysql://10.241.30.70:3307/lottery?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "123456";
+public class DLTInsert {
 
     public static void main(String[] args) throws Exception {
         var sportteryClient = new SportteryClient();
 
-        for (int i = 1; i <= 2; i++) {
-            String json = sportteryClient.getHistoryPageList(i);
+        for (int i = 1; i <= 100; i++) {
+            String json = sportteryClient.getHistoryPageList(85, i);
             try {
                 insert(json);
             } catch (Exception e) {
@@ -34,7 +31,7 @@ public class LotteryInsert {
         JsonNode root = mapper.readTree(json);
         JsonNode list = root.path("value").path("list");
 
-        String insertSql = "INSERT INTO lottery_draw_full (\n" +
+        String insertSql = "INSERT INTO lottery_draw_dlt (\n" +
                 "    lottery_game_name,\n" +
                 "    lottery_game_num,\n" +
                 "    lottery_draw_num,\n" +
@@ -125,7 +122,7 @@ public class LotteryInsert {
                 "    ninth_prize_amount = VALUES(ninth_prize_amount),\n" +
                 "    ninth_prize_total = VALUES(ninth_prize_total);";
 
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+        try (Connection conn = DriverManager.getConnection(Global.JDBC_URL, Global.JDBC_USER, Global.JDBC_PASSWORD);
              PreparedStatement ps = conn.prepareStatement(insertSql)) {
 
             for (JsonNode draw : list) {
@@ -143,9 +140,7 @@ public class LotteryInsert {
                     ps.setString(10, draw.path("drawPdfUrl").asText());
 
                     // 拆前区后区号码
-                    String[] nums = draw.path("lotteryUnsortDrawresult").asText().equalsIgnoreCase("current") || draw.path("lotteryUnsortDrawresult").asText().isEmpty() ?
-                            draw.path("lotteryDrawResult").asText().split(" ") :
-                            draw.path("lotteryUnsortDrawresult").asText().split(" ");
+                    String[] nums = draw.path("lotteryDrawResult").asText().split(" ");
                     ps.setInt(11, Integer.parseInt(nums[0]));
                     ps.setInt(12, Integer.parseInt(nums[1]));
                     ps.setInt(13, Integer.parseInt(nums[2]));

@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WW2YxLInsert {
-    private static final String JDBC_URL = "jdbc:mysql://10.241.41.11:3306/lottery?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "Bonree@2025";
 
     public static void main(String[] args) throws Exception {
         var sportteryClient = new SportteryClient();
@@ -41,7 +38,7 @@ public class WW2YxLInsert {
                 "correct_answers = VALUES(correct_answers)," +
                 "choices = VALUES(choices);";
 
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+        try (Connection conn = DriverManager.getConnection(Global.JDBC_URL, Global.JDBC_USER, Global.JDBC_PASSWORD);
              PreparedStatement ps = conn.prepareStatement(insertSql)) {
 
             for (JsonNode field : fields) {
